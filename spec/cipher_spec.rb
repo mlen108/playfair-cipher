@@ -21,11 +21,11 @@ describe Cipher do
   context 'when the message is not valid' do
     subject { Cipher.new('playfair example') }
 
-    it 'will not be able to encrypt and raise an error' do
+    it 'will not encrypt it & raise an error' do
       expect{ subject.encrypt('1234567') }.to raise_error
     end
 
-    it 'will not be able to decrypt and raise an error' do
+    it 'will not decrypt it & raise an error' do
       expect{ subject.decrypt('1234567') }.to raise_error
     end
   end
