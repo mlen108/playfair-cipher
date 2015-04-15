@@ -1,10 +1,10 @@
 class Cipher
-  attr_reader :memo_key
+  attr_reader :key, :grid
 
   def initialize(key)
-    @memo_key = key
+    @key = prepare(key)
 
-    check
+    check(@key)
 
     @grid = generate_grid
   end
@@ -16,12 +16,16 @@ class Cipher
   end
 
   private
-    def check
-      if @memo_key.nil? || @memo_key.length == 0
+    def prepare(str)
+      str.delete(' ').upcase
+    end
+
+    def check(str)
+      if str.nil? || str.length == 0
         fail 'It cannot be empty.'
       end
 
-      if num?(@memo_key)
+      if num?(str)
         fail 'It must be in range of A-Z characters.'
       end
     end
@@ -31,5 +35,21 @@ class Cipher
     end
 
     def generate_grid
+      grid = ''
+      alphabet = 'ABCDEFGHIJKLMNOPRSTUVWXYZ'
+
+      @key.chars.each do |l|
+        if !grid.include?(l) && alphabet.include?(l)
+          grid += l
+        end
+      end
+
+      alphabet.chars.each do |l|
+        if !grid.include?(l)
+          grid += l
+        end
+      end
+
+      grid
     end
 end

@@ -16,9 +16,19 @@ describe Cipher do
   end
 
   context 'when the key is valid' do
+    subject{ described_class.new('playfair example') }
+
     it 'will not raise an exception' do
       expect{ described_class.new('abc') }.not_to raise_error
-      expect{ described_class.new('XYZ') }.not_to raise_error
+      expect{ described_class.new('ABC') }.not_to raise_error
+    end
+
+    it 'will generate the correct key table' do
+      expect(subject.grid).to eq('PLAYFIREXMBCDGHJKNOSTUVWZ')
+    end
+
+    it 'will make the key table containing 25 chars in total' do
+      expect(subject.grid.length).to eq(25)
     end
   end
 
