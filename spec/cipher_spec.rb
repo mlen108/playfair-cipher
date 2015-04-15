@@ -2,15 +2,19 @@ require 'cipher'
 
 describe Cipher do
   context 'when the key is empty' do
-    subject { Cipher.new('') }
-
     it 'will raise an error' do
-      expect(subject).to raise_error
+      expect{ described_class.new('') }.to raise_error
+    end
+  end
+
+  context 'when the key is not valid' do
+    it 'will raise an error' do
+      expect{ described_class.new('1234567') }.to raise_error
     end
   end
 
   context 'when the message is empty' do
-    subject { Cipher.new('playfair example') }
+    subject{ Cipher.new('playfair example') }
 
     it 'will raise an error' do
       expect{ subject.encrypt('') }.to raise_error
@@ -19,7 +23,7 @@ describe Cipher do
   end
 
   context 'when the message is not valid' do
-    subject { Cipher.new('playfair example') }
+    subject{ Cipher.new('playfair example') }
 
     it 'will not encrypt it & raise an error' do
       expect{ subject.encrypt('1234567') }.to raise_error
@@ -31,7 +35,7 @@ describe Cipher do
   end
 
   context 'when the message is valid' do
-    subject { Cipher.new('playfair example') }
+    subject{ Cipher.new('playfair example') }
 
     it 'will encrypt it' do
       expect{ subject.encrypt('Hide the gold in the tree stump') }.to eq('BMODZBXDNABEKUDMUIXMMOUVIF')
