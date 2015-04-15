@@ -32,36 +32,36 @@ describe Cipher do
     end
   end
 
-  # context 'when the message is empty' do
-  #   subject{ Cipher.new('playfair example') }
-  #
-  #   it 'will raise an error' do
-  #     expect{ subject.encrypt('') }.to raise_error
-  #     expect{ subject.decrypt('') }.to raise_error
-  #   end
-  # end
+  context 'when the message is empty' do
+    subject{ described_class.new('playfair example') }
 
-  # context 'when the message is not valid' do
-  #   subject{ Cipher.new('playfair example') }
-  #
-  #   it 'will not encrypt it & raise an error' do
-  #     expect{ subject.encrypt('1234567') }.to raise_error
-  #   end
-  #
-  #   it 'will not decrypt it & raise an error' do
-  #     expect{ subject.decrypt('1234567') }.to raise_error
-  #   end
-  # end
-  #
-  # context 'when the message is valid' do
-  #   subject{ Cipher.new('playfair example') }
-  #
-  #   it 'will encrypt it' do
-  #     expect{ subject.encrypt('Hide the gold in the tree stump') }.to eq('BMODZBXDNABEKUDMUIXMMOUVIF')
-  #   end
-  #
-  #   it 'will decrypt it' do
-  #     expect{ subject.decrypt('BMODZBXDNABEKUDMUIXMMOUVIF') }.to eq('Hide the gold in the tree stump')
-  #   end
-  # end
+    it 'will raise an error' do
+      expect{ subject.encrypt('') }.to raise_error
+      expect{ subject.decrypt('') }.to raise_error
+    end
+  end
+
+  context 'when the message is not valid' do
+    subject{ described_class.new('playfair example') }
+
+    it 'will not encrypt it & raise an error' do
+      expect{ subject.encrypt('1234567') }.to raise_error
+    end
+
+    it 'will not decrypt it & raise an error' do
+      expect{ subject.decrypt('1234567') }.to raise_error
+    end
+  end
+
+  context 'when the message is valid' do
+    subject{ described_class.new('playfair example') }
+
+    it 'will encrypt it' do
+      expect{ subject.encrypt('Hide the gold in the tree stump') }.to eq('BMODZBXDNABEKUDMUIXMMOUVIF')
+    end
+
+    it 'will decrypt it' do
+      expect{ subject.decrypt('BMODZBXDNABEKUDMUIXMMOUVIF') }.to eq('Hide the gold in the tree stump')
+    end
+  end
 end

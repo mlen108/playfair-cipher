@@ -10,9 +10,11 @@ class Cipher
   end
 
   def encrypt(msg)
+    check(msg)
   end
 
   def decrypt(msg)
+    check(msg)
   end
 
   private
