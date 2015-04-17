@@ -48,24 +48,13 @@ class Message
     @msg = message
     @msg_size = message.size
 
-    @grid = ''
-    @alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ' # no J in here
-
-    memo_key
+    @grid = memo_key
   end
 
   def memo_key
-    @key.chars.each do |l|
-      if !@grid.include?(l) && @alphabet.include?(l)
-        @grid += l
-      end
-    end
-
-    @alphabet.chars.each do |l|
-      unless @grid.include?(l)
-        @grid += l
-      end
-    end
+    alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ' # no J in here
+    uniq_key = @key.chars.to_a.uniq.join
+    uniq_key + (alphabet.split(//) - uniq_key.split(//)).join
   end
 
   def each
@@ -85,6 +74,7 @@ class Message
   end
 end
 
+# Represents a pair of letters and allows to encrypt/decrypt them
 class Digraph
   # TODO(mlen) - refactor this encrypt/decrypt madness
   attr_reader :first_char, :second_char, :grid
