@@ -1,14 +1,11 @@
 class Cipher
-  attr_reader :grid
-
-  def initialize(key, message)
+  def initialize(key, msg)
     key = prepare(key)
-    message = prepare(message)
+    msg = prepare(msg)
 
-    check(key)
-    check(message)
+    validate(key, msg)
 
-    @digraphs = Message.new(key, message)
+    @digraphs = Message.new(key, msg)
   end
 
   def encrypt
@@ -22,15 +19,17 @@ class Cipher
   private
 
   def prepare(str)
-    str.delete(' ').upcase
+    str.strip.delete(' ').upcase
   end
 
-  def check(str)
-    if str.nil? || str.length == 0
-      fail 'It cannot be empty.'
-    end
+  def validate(*args)
+    args.each do |str|
+      if str.nil? || str.length == 0
+        fail 'It cannot be empty.'
+      end
 
-    fail 'It must be in range of A-Z characters.' unless num?(str)
+      fail 'It must be in range of A-Z characters.' unless num?(str)
+    end
   end
 
   def num?(str)
