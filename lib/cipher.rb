@@ -12,11 +12,11 @@ class Cipher
   end
 
   def encrypt
-    @digraphs.map { |d| d.encrypt }.join
+    @digraphs.map(&:encrypt).join
   end
 
   def decrypt
-    @digraphs.map { |d| d.decrypt }.join
+    @digraphs.map(&:decrypt).join
   end
 
   private
