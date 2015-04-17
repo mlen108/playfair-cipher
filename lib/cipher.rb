@@ -1,3 +1,8 @@
+# Cipher encrypts/decrypts messages using the rules described at
+# http://en.wikipedia.org/wiki/Playfair_cipher
+# Additional rules:
+#  - 'X' is used to append to a digraph if needed,
+#  - 'J' is replaced with 'I'
 class Cipher
   def initialize(key, msg)
     key = prepare(key)
@@ -24,10 +29,7 @@ class Cipher
 
   def validate(*args)
     args.each do |str|
-      if str.nil? || str.length == 0
-        fail 'It cannot be empty.'
-      end
-
+      fail 'It cannot be empty.' if str.nil? || str.length == 0
       fail 'It must be in range of A-Z characters.' unless num?(str)
     end
   end
@@ -37,54 +39,46 @@ class Cipher
   end
 end
 
+# Breaks a message into pair of digraphs
 class Message
   include Enumerable
-
-  attr_reader :key, :message
 
   def initialize(key, message)
     @key = key
     @msg = message
+    @msg_size = message.size
 
     @grid = ''
+    @alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ' # no J in here
+
     memo_key
   end
 
   def memo_key
-    grid = ''
-    alphabet = ('A'..'Z').to_a
-
     @key.chars.each do |l|
-      if !grid.include?(l) && alphabet.include?(l)
-        grid += l
+      if !@grid.include?(l) && @alphabet.include?(l)
+        @grid += l
       end
     end
 
-    alphabet.each do |l|
-      if l == 'J'
-        l = 'I'
-      end
-      if !grid.include?(l)
-        grid += l
+    @alphabet.chars.each do |l|
+      unless @grid.include?(l)
+        @grid += l
       end
     end
-
-    @grid = grid
   end
 
   def each
-    msg_fixed = @msg.tr('J', 'I')
-
     counter = 0
-    while counter < msg_fixed.size
-      if counter + 1 == msg_fixed.size
-        yield Digraph.new(msg_fixed[counter], 'X', @grid)
+    while counter < @msg_size
+      if counter + 1 == @msg_size
+        yield Digraph.new(@msg[counter], 'X', @grid)
         break
-      elsif msg_fixed[counter] != msg_fixed[counter + 1]
-        yield Digraph.new(msg_fixed[counter], msg_fixed[counter + 1], @grid)
+      elsif @msg[counter] != @msg[counter + 1]
+        yield Digraph.new(@msg[counter], @msg[counter + 1], @grid)
         counter += 2
       else
-        yield Digraph.new(msg_fixed[counter], 'X', @grid)
+        yield Digraph.new(@msg[counter], 'X', @grid)
         counter += 1
       end
     end
