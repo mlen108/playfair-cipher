@@ -29,7 +29,7 @@ class Cipher
 
   def validate(*args)
     args.each do |str|
-      fail 'It cannot be empty.' if str.nil? || str.length == 0
+      fail 'It cannot be empty.' unless str && str.length > 0
       fail 'It must be in range of A-Z characters.' unless num?(str)
     end
   end
