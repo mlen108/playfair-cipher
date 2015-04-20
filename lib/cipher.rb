@@ -53,8 +53,8 @@ class Message
 
   def memo_key
     alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ' # no J in here
-    uniq_key = @key.chars.to_a.uniq.join
-    uniq_key + (alphabet.split(//) - uniq_key.split(//)).join
+    uniq_key = @key.split(//).uniq
+    (uniq_key + (alphabet.split(//) - uniq_key)).join
   end
 
   def each
