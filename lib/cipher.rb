@@ -47,6 +47,7 @@ class Message
     @key = key
     @msg = message
     @msg_size = message.size
+    @counter = 0
 
     @grid = memo_key
   end
@@ -58,14 +59,14 @@ class Message
   end
 
   def each
-    counter = 0
-    while counter < @msg_size
-      if @msg[counter] != @msg[counter + 1]
-        yield Digraph.new(@msg[counter], @msg[counter + 1], @grid)
-        counter += 2
+    while @counter < @msg_size
+      first_ch = @msg[@counter]
+      if first_ch != @msg[@counter.next]
+        yield Digraph.new(first_ch, @msg[@counter.next], @grid)
+        @counter += 2
       else
-        yield Digraph.new(@msg[counter], 'X', @grid)
-        counter += 1 if counter + 1 != @msg_size
+        yield Digraph.new(first_ch, 'X', @grid)
+        @counter += 1
       end
     end
   end
