@@ -74,62 +74,72 @@ class Message
   end
 end
 
-# Represents a pair of letters and allows to encrypt/decrypt them
+# Represents a pair of letters and allows to encrypt/decrypt it within a grid
 class Digraph
-  # TODO(mlen) - refactor this encrypt/decrypt madness
-  attr_reader :first_char, :second_char, :grid
+  attr_reader :grid, :coords
 
   def initialize(first_char, second_char, grid)
-    @first_char = first_char
-    @second_char = second_char
     @grid = grid
+
+    first_pos = grid.index(first_char)
+    second_pos = grid.index(second_char)
+
+    @coords = [
+      first_pos % 5, first_pos / 5,
+      second_pos % 5, second_pos / 5
+    ]
   end
 
   def encrypt
-    first_char_pos = grid.index(first_char)
-    second_char_pos = grid.index(second_char)
-
-    first_char_coords = [first_char_pos % 5, first_char_pos / 5]
-    second_char_coords = [second_char_pos % 5, second_char_pos / 5]
-
-    # letters appear on the same row
-    if first_char_coords[1] == second_char_coords[1]
-      first_encrypted = grid[(first_char_coords[1] * 5) + ((first_char_coords[0] + 1) % 5)]
-      second_encrypted = grid[(second_char_coords[1] * 5) + ((second_char_coords[0] + 1) % 5)]
-    # letters appear on the same column
-    elsif first_char_coords[0] == second_char_coords[0]
-      first_encrypted = grid[(((first_char_coords[1] + 1) % 5) * 5) + first_char_coords[0]]
-      second_encrypted = grid[(((second_char_coords[1] + 1) % 5) * 5) + second_char_coords[0]]
-    # letters are not on the same row or column (they form a rectangle)
-    else
-      first_encrypted = grid[(first_char_coords[1] * 5) + second_char_coords[0]]
-      second_encrypted = grid[(second_char_coords[1] * 5) + first_char_coords[0]]
-    end
-
-    first_encrypted + second_encrypted
+    translate.map { |x| grid[x] }.join
   end
 
   def decrypt
-    first_char_pos = grid.index(first_char)
-    second_char_pos = grid.index(second_char)
+    translate(true).map { |x| grid[x] }.join
+  end
 
-    first_char_coords = [first_char_pos % 5, first_char_pos / 5]
-    second_char_coords = [second_char_pos % 5, second_char_pos / 5]
-
-    # letters appear on the same row
-    if first_char_coords[1] == second_char_coords[1]
-      first_decrypted = grid[(first_char_coords[1] * 5) + ((first_char_coords[0] - 1) % 5)]
-      second_decrypted = grid[(second_char_coords[1] * 5) + ((second_char_coords[0] - 1) % 5)]
-    # letters appear on the same column
-    elsif first_char_coords[0] == second_char_coords[0]
-      first_decrypted = grid[(((first_char_coords[1] - 1) % 5) * 5) + first_char_coords[0]]
-      second_decrypted = grid[(((second_char_coords[1] - 1) % 5) * 5) + second_char_coords[0]]
-    # letters are not on the same row or column (they form a rectangle)
+  def translate(decrypt = nil)
+    if coords[1] == coords[3]
+      decrypt ? decrypt_row : encrypt_row
+    elsif coords[0] == coords[2]
+      decrypt ? decrypt_column : encrypt_column
     else
-      first_decrypted = grid[(first_char_coords[1] * 5) + second_char_coords[0]]
-      second_decrypted = grid[(second_char_coords[1] * 5) + first_char_coords[0]]
+      translate_rectangle
     end
+  end
 
-    first_decrypted + second_decrypted
+  def encrypt_row
+    [
+      (coords[1] * 5) + ((coords[0] + 1) % 5),
+      (coords[3] * 5) + ((coords[2] + 1) % 5)
+    ]
+  end
+
+  def decrypt_row
+    [
+      (coords[1] * 5) + ((coords[0] - 1) % 5),
+      (coords[3] * 5) + ((coords[2] - 1) % 5)
+    ]
+  end
+
+  def encrypt_column
+    [
+      (((coords[1] + 1) % 5) * 5) + coords[0],
+      (((coords[3] + 1) % 5) * 5) + coords[2]
+    ]
+  end
+
+  def decrypt_column
+    [
+      (((coords[1] - 1) % 5) * 5) + coords[0],
+      (((coords[3] - 1) % 5) * 5) + coords[2]
+    ]
+  end
+
+  def translate_rectangle
+    [
+      (coords[1] * 5) + coords[2],
+      (coords[3] * 5) + coords[0]
+    ]
   end
 end
