@@ -107,20 +107,20 @@ class Digraph
   end
 
   def translate_row(smb)
-    coords.each_slice(2).map { |k, v|
+    coords.each_slice(2).map do |k, v|
       (v * 5) + (k.send(smb, 1) % 5)
-    }
+    end
   end
 
   def translate_column(smb)
-    coords.each_slice(2).map { |k, v|
+    coords.each_slice(2).map do |k, v|
       ((v.send(smb, 1) % 5) * 5) + k
-    }
+    end
   end
 
   def translate_rectangle
-    [[1, 2], [3, 0]].map { |k, v|
+    [[1, 2], [3, 0]].map do |k, v|
       (coords[k] * 5) + coords[v]
-    }
+    end
   end
 end
