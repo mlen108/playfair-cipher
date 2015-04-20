@@ -131,9 +131,8 @@ class Digraph
   end
 
   def translate_rectangle
-    [
-      (coords[1] * 5) + coords[2],
-      (coords[3] * 5) + coords[0]
-    ]
+    [[1, 2], [3, 0]].map { |k, v|
+      (coords[k] * 5) + coords[v]
+    }
   end
 end
