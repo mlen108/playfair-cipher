@@ -92,6 +92,7 @@ class Digraph
   end
 
   def decrypt
+    # translate(true)
     translate(true).map { |x| grid[x] }.join
   end
 
@@ -106,31 +107,27 @@ class Digraph
   end
 
   def encrypt_row
-    [
-      (coords[1] * 5) + ((coords[0] + 1) % 5),
-      (coords[3] * 5) + ((coords[2] + 1) % 5)
-    ]
+    coords.each_slice(2).map { |k, v|
+      (v * 5) + ((k + 1) % 5)
+    }
   end
 
   def decrypt_row
-    [
-      (coords[1] * 5) + ((coords[0] - 1) % 5),
-      (coords[3] * 5) + ((coords[2] - 1) % 5)
-    ]
+    coords.each_slice(2).map { |k, v|
+      (v * 5) + ((k - 1) % 5)
+    }
   end
 
   def encrypt_column
-    [
-      (((coords[1] + 1) % 5) * 5) + coords[0],
-      (((coords[3] + 1) % 5) * 5) + coords[2]
-    ]
+    coords.each_slice(2).map { |k, v|
+      (((v + 1) % 5) * 5) + k
+    }
   end
 
   def decrypt_column
-    [
-      (((coords[1] - 1) % 5) * 5) + coords[0],
-      (((coords[3] - 1) % 5) * 5) + coords[2]
-    ]
+    coords.each_slice(2).map { |k, v|
+      (((v - 1) % 5) * 5) + k
+    }
   end
 
   def translate_rectangle
