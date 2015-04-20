@@ -88,45 +88,32 @@ class Digraph
   end
 
   def encrypt
-    translate.map { |x| grid[x] }.join
+    translate(:+).map { |x| grid[x] }.join
   end
 
   def decrypt
-    # translate(true)
-    translate(true).map { |x| grid[x] }.join
+    translate(:-).map { |x| grid[x] }.join
   end
 
-  def translate(decrypt = nil)
+  def translate(smb)
     if coords[1] == coords[3]
-      decrypt ? decrypt_row : encrypt_row
+      translate_row(smb)
     elsif coords[0] == coords[2]
-      decrypt ? decrypt_column : encrypt_column
+      translate_column(smb)
     else
       translate_rectangle
     end
   end
 
-  def encrypt_row
+  def translate_row(smb)
     coords.each_slice(2).map { |k, v|
-      (v * 5) + ((k + 1) % 5)
+      (v * 5) + (k.send(smb, 1) % 5)
     }
   end
 
-  def decrypt_row
+  def translate_column(smb)
     coords.each_slice(2).map { |k, v|
-      (v * 5) + ((k - 1) % 5)
-    }
-  end
-
-  def encrypt_column
-    coords.each_slice(2).map { |k, v|
-      (((v + 1) % 5) * 5) + k
-    }
-  end
-
-  def decrypt_column
-    coords.each_slice(2).map { |k, v|
-      (((v - 1) % 5) * 5) + k
+      ((v.send(smb, 1) % 5) * 5) + k
     }
   end
 
