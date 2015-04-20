@@ -60,15 +60,12 @@ class Message
   def each
     counter = 0
     while counter < @msg_size
-      if counter + 1 == @msg_size
-        yield Digraph.new(@msg[counter], 'X', @grid)
-        break
-      elsif @msg[counter] != @msg[counter + 1]
+      if @msg[counter] != @msg[counter + 1]
         yield Digraph.new(@msg[counter], @msg[counter + 1], @grid)
         counter += 2
       else
         yield Digraph.new(@msg[counter], 'X', @grid)
-        counter += 1
+        counter += 1 if counter + 1 != @msg_size
       end
     end
   end
